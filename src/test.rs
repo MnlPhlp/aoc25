@@ -21,7 +21,7 @@ fn test_day(day: usize, exp1: &str, exp2: &str) {
 
 #[test]
 pub fn day1() {
-    test_day(1, "Not implemented", "Not implemented");
+    test_day(1, "1100", "6358");
 }
 
 #[test]
@@ -78,4 +78,3 @@ pub fn day11() {
 pub fn day12() {
     test_day(12, "Not implemented", "Not implemented");
 }
-
