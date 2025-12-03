@@ -73,6 +73,32 @@ fn get_invalid_ids_sum_1(range: RangeInclusive<u64>) -> u64 {
     invalid_ids_sum
 }
 
+fn get_invalid_ids_sum_2(range: RangeInclusive<u64>) -> u64 {
+    let mut invalid_ids_sum = 0;
+    for num in range {
+        let num_str = num.to_string();
+        for sub_l in 1..=(num_str.len() / 2) {
+            if num_str.len() % sub_l != 0 {
+                continue;
+            }
+            let mut is_invalid = true;
+            let first_sub = &num_str[0..sub_l];
+            for start in (sub_l..num_str.len()).step_by(sub_l) {
+                let sub = &num_str[start..start + sub_l];
+                if sub != first_sub {
+                    is_invalid = false;
+                    break;
+                }
+            }
+            if is_invalid {
+                invalid_ids_sum += num;
+                break;
+            }
+        }
+    }
+    invalid_ids_sum
+}
+
 impl<'a> DaySolver<'a> for Solver {
     type Input = Vec<RangeInclusive<u64>>;
 
@@ -96,12 +122,16 @@ impl<'a> DaySolver<'a> for Solver {
     fn solve1(&self, input: &Self::Input, test: bool) -> String {
         let mut sum = 0;
         for range in input {
-            sum += get_invalid_ids_sum(range.clone());
+            sum += get_invalid_ids_sum_1(range.clone());
         }
         sum.to_string()
     }
 
-    fn solve2(&self, _input: &Self::Input, _test: bool) -> String {
-        "Not implemented".to_string()
+    fn solve2(&self, input: &Self::Input, test: bool) -> String {
+        let mut sum = 0;
+        for range in input {
+            sum += get_invalid_ids_sum_2(range.clone());
+        }
+        sum.to_string()
     }
 }
