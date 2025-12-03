@@ -111,10 +111,9 @@ fn get_invalid_ids_sum_2(range: RangeInclusive<u64>) -> u64 {
         };
         // generate and check repeated numbers
         for part in min..=max {
-            let part_len = part.ilog10() + 1;
             let mut repeated = part;
             while repeated < *range.end() {
-                repeated = repeated * 10u64.pow(part_len) + part;
+                repeated = repeated * 10u64.pow(l as u32) + part;
                 if repeated >= *range.start()
                     && repeated <= *range.end()
                     && !invalid_ids.contains(&repeated)
