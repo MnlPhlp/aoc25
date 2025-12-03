@@ -8,19 +8,19 @@ Executed by `cargo run --release` on Framework Laptop 14 with `12th Gen Intel(R)
 ## Results:
 day | result 1        | result 2        | time      | % overall 
 --: | :-------------: | :--------------:| --------: | :--------
-  1 | 1100            | 6358            |  393.75µs | 10.31 %
-  2 | 64215794229     | 85513235135     |    3.32ms | 87.01 %
-  3 | Not implemented | Not implemented |    2.97µs | 0.05 %
-  4 | Not implemented | Not implemented |    2.37µs | 0.05 %
-  5 | Not implemented | Not implemented |    2.61µs | 0.05 %
-  6 | Not implemented | Not implemented |    2.55µs | 0.05 %
-  7 | Not implemented | Not implemented |    2.48µs | 0.05 %
-  8 | Not implemented | Not implemented |    2.87µs | 0.05 %
-  9 | Not implemented | Not implemented |    2.31µs | 0.05 %
- 10 | Not implemented | Not implemented |    2.44µs | 0.05 %
- 11 | Not implemented | Not implemented |    2.45µs | 0.05 %
- 12 | Not implemented | Not implemented |    2.25µs | 0.05 %
+  1 | 1100            | 6358            |  429.11µs | 22.02 %
+  2 | 64215794229     | 85513235135     |    1.42ms | 72.69 %
+  3 | Not implemented | Not implemented |    2.98µs | 0.10 %
+  4 | Not implemented | Not implemented |    2.48µs | 0.10 %
+  5 | Not implemented | Not implemented |    2.88µs | 0.10 %
+  6 | Not implemented | Not implemented |    2.31µs | 0.10 %
+  7 | Not implemented | Not implemented |    2.44µs | 0.10 %
+  8 | Not implemented | Not implemented |    3.01µs | 0.15 %
+  9 | Not implemented | Not implemented |    2.30µs | 0.10 %
+ 10 | Not implemented | Not implemented |    2.46µs | 0.10 %
+ 11 | Not implemented | Not implemented |    2.33µs | 0.10 %
+ 12 | Not implemented | Not implemented |    2.22µs | 0.10 %
 
-Overall Time: 3.810067ms
+Overall Time: 1.948665ms
 
-Summed Time: 3.734695ms
+Summed Time: 1.871427ms
