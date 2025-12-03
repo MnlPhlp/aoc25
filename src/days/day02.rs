@@ -1,3 +1,4 @@
+#![allow(clippy::cast_possible_truncation)]
 use std::ops::RangeInclusive;
 
 use crate::types::DaySolver;
@@ -34,7 +35,7 @@ fn get_invalid_ids_sum_1(range: RangeInclusive<u64>) -> u64 {
             let right_min = start[half_l..].parse::<u64>().unwrap();
             let right_max = end[half_l..].parse::<u64>().unwrap();
             if left_min <= right_max && left_max >= right_min {
-                invalid_ids_sum += (left_min * 10u64.pow(half_l as u32) + left_min);
+                invalid_ids_sum += left_min * 10u64.pow(half_l as u32) + left_min;
             }
             continue;
         }
@@ -48,7 +49,7 @@ fn get_invalid_ids_sum_1(range: RangeInclusive<u64>) -> u64 {
             let left_num = left_part.parse::<u64>().unwrap();
             let right_num = right_part.parse::<u64>().unwrap();
             if left_num >= right_num {
-                invalid_ids_sum += (left_num * 10u64.pow(half_l as u32) + left_num);
+                invalid_ids_sum += left_num * 10u64.pow(half_l as u32) + left_num;
             }
             left_min += 1;
         }
@@ -60,13 +61,13 @@ fn get_invalid_ids_sum_1(range: RangeInclusive<u64>) -> u64 {
             let left_num = left_part.parse::<u64>().unwrap();
             let right_num = right_part.parse::<u64>().unwrap();
             if left_num <= right_num {
-                invalid_ids_sum += (left_num * 10u64.pow(half_l as u32) + left_num);
+                invalid_ids_sum += left_num * 10u64.pow(half_l as u32) + left_num;
             }
             left_max -= 1;
         }
         for left in left_min..=left_max {
             if left <= right_max && left >= right_min {
-                invalid_ids_sum += (left * 10u64.pow(half_l as u32) + left);
+                invalid_ids_sum += left * 10u64.pow(half_l as u32) + left;
             }
         }
     }
@@ -74,29 +75,57 @@ fn get_invalid_ids_sum_1(range: RangeInclusive<u64>) -> u64 {
 }
 
 fn get_invalid_ids_sum_2(range: RangeInclusive<u64>) -> u64 {
-    let mut invalid_ids_sum = 0;
-    for num in range {
-        let num_str = num.to_string();
-        for sub_l in 1..=(num_str.len() / 2) {
-            if num_str.len() % sub_l != 0 {
-                continue;
-            }
-            let mut is_invalid = true;
-            let first_sub = &num_str[0..sub_l];
-            for start in (sub_l..num_str.len()).step_by(sub_l) {
-                let sub = &num_str[start..start + sub_l];
-                if sub != first_sub {
-                    is_invalid = false;
+    let mut invalid_ids = Vec::new();
+    let start = range.start().to_string();
+    let end = range.end().to_string();
+
+    // check if there is a fixed prefix we have to include in the repeated part
+    let fixed_prefix = if start.len() < end.len() {
+        ""
+    } else {
+        let prefix_len = start
+            .chars()
+            .zip(end.chars())
+            .take_while(|(a, b)| a == b)
+            .count();
+        &start[..prefix_len]
+    };
+    let prefix_len = fixed_prefix.len();
+
+    // generate possible solutions
+    for l in 1..=end.len() / 2 {
+        // start and end with the fixed prefix
+        let min = if prefix_len >= l {
+            fixed_prefix[..l].parse::<u64>().unwrap()
+        } else if prefix_len > 0 {
+            fixed_prefix.parse::<u64>().unwrap() * 10u64.pow((l - prefix_len) as u32)
+        } else {
+            10u64.pow((l - 1) as u32)
+        };
+        let max = if prefix_len >= l {
+            fixed_prefix[..l].parse::<u64>().unwrap()
+        } else if prefix_len > 0 {
+            fixed_prefix.parse::<u64>().unwrap() * 10u64.pow((l - prefix_len + 1) as u32) - 1
+        } else {
+            10u64.pow(l as u32) - 1
+        };
+        // generate and check repeated numbers
+        for part in min..=max {
+            let part_len = part.ilog10() + 1;
+            let mut repeated = part;
+            while repeated < *range.end() {
+                repeated = repeated * 10u64.pow(part_len) + part;
+                if repeated >= *range.start()
+                    && repeated <= *range.end()
+                    && !invalid_ids.contains(&repeated)
+                {
+                    invalid_ids.push(repeated);
                     break;
                 }
             }
-            if is_invalid {
-                invalid_ids_sum += num;
-                break;
-            }
         }
     }
-    invalid_ids_sum
+    invalid_ids.iter().sum()
 }
 
 impl<'a> DaySolver<'a> for Solver {
@@ -119,7 +148,7 @@ impl<'a> DaySolver<'a> for Solver {
         ranges
     }
 
-    fn solve1(&self, input: &Self::Input, test: bool) -> String {
+    fn solve1(&self, input: &Self::Input, _test: bool) -> String {
         let mut sum = 0;
         for range in input {
             sum += get_invalid_ids_sum_1(range.clone());
@@ -127,7 +156,7 @@ impl<'a> DaySolver<'a> for Solver {
         sum.to_string()
     }
 
-    fn solve2(&self, input: &Self::Input, test: bool) -> String {
+    fn solve2(&self, input: &Self::Input, _test: bool) -> String {
         let mut sum = 0;
         for range in input {
             sum += get_invalid_ids_sum_2(range.clone());

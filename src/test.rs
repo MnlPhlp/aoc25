@@ -26,7 +26,7 @@ pub fn day1() {
 
 #[test]
 pub fn day2() {
-    test_day(2, "64215794229", "Not implemented");
+    test_day(2, "64215794229", "85513235135");
 }
 
 #[test]
