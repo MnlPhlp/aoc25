@@ -76,39 +76,12 @@ fn get_invalid_ids_sum_1(range: RangeInclusive<u64>) -> u64 {
 
 fn get_invalid_ids_sum_2(range: RangeInclusive<u64>) -> u64 {
     let mut invalid_ids = Vec::new();
-    let start = range.start().to_string();
-    let end = range.end().to_string();
-
-    // check if there is a fixed prefix we have to include in the repeated part
-    let fixed_prefix = if start.len() < end.len() {
-        ""
-    } else {
-        let prefix_len = start
-            .chars()
-            .zip(end.chars())
-            .take_while(|(a, b)| a == b)
-            .count();
-        &start[..prefix_len]
-    };
-    let prefix_len = fixed_prefix.len();
+    let end_len = range.end().ilog10() as usize + 1;
 
     // generate possible solutions
-    for l in 1..=end.len() / 2 {
-        // start and end with the fixed prefix
-        let min = if prefix_len >= l {
-            fixed_prefix[..l].parse::<u64>().unwrap()
-        } else if prefix_len > 0 {
-            fixed_prefix.parse::<u64>().unwrap() * 10u64.pow((l - prefix_len) as u32)
-        } else {
-            10u64.pow((l - 1) as u32)
-        };
-        let max = if prefix_len >= l {
-            fixed_prefix[..l].parse::<u64>().unwrap()
-        } else if prefix_len > 0 {
-            fixed_prefix.parse::<u64>().unwrap() * 10u64.pow((l - prefix_len + 1) as u32) - 1
-        } else {
-            10u64.pow(l as u32) - 1
-        };
+    for l in 1..=end_len / 2 {
+        let min = 10u64.pow((l - 1) as u32);
+        let max = 10u64.pow(l as u32) - 1;
         // generate and check repeated numbers
         for part in min..=max {
             let mut repeated = part;

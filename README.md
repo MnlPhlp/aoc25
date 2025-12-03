@@ -8,8 +8,8 @@ Executed by `cargo run --release` on Framework Laptop 14 with `12th Gen Intel(R)
 ## Results:
 day | result 1        | result 2        | time      | % overall 
 --: | :-------------: | :--------------:| --------: | :--------
-  2 | 64215794229     | 85513235135     |   23.53ms | 99.81 %
+  2 | 64215794229     | 85513235135     |    3.49ms | 99.54 %
 
-Overall Time: 23.571648ms
+Overall Time: 3.50449ms
 
-Summed Time: 23.526679ms
+Summed Time: 3.48869ms
