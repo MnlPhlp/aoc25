@@ -36,12 +36,12 @@ pub fn day3() {
 
 #[test]
 pub fn day4() {
-    test_day(4, "Not implemented", "Not implemented");
+    test_day(4, "1419", "8739");
 }
 
 #[test]
 pub fn day5() {
-    test_day(5, "Not implemented", "Not implemented");
+    test_day(5, "737", "357485433193284");
 }
 
 #[test]
