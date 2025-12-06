@@ -35,6 +35,19 @@ fn parse_day_1(input: &str) -> Problems {
     }
 }
 
+fn solve_problems(input: Problems) -> String {
+    let mut sum = 0;
+    for (values, op) in input.values.iter().zip(input.ops.iter()) {
+        let result: u64 = match *op as char {
+            '+' => values.iter().sum(),
+            '*' => values.iter().product(),
+            _ => panic!("Unknown operation: {}", *op as char),
+        };
+        sum += result;
+    }
+    sum.to_string()
+}
+
 impl<'a> DaySolver<'a> for Solver {
     type Input = &'a str;
 
@@ -44,16 +57,7 @@ impl<'a> DaySolver<'a> for Solver {
 
     fn solve1(&self, input: &Self::Input, _test: bool) -> String {
         let input = parse_day_1(input);
-        let mut sum: u64 = 0;
-        for (values, op) in input.values.iter().zip(input.ops.iter()) {
-            let result: u64 = match *op as char {
-                '+' => values.iter().sum(),
-                '*' => values.iter().product(),
-                _ => panic!("Unknown operation: {}", *op as char),
-            };
-            sum += result;
-        }
-        sum.to_string()
+        solve_problems(input)
     }
 
     fn solve2(&self, _input: &Self::Input, _test: bool) -> String {
