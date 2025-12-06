@@ -1,4 +1,3 @@
-#![allow(clippy::cast_possible_truncation)]
 use std::ops::RangeInclusive;
 
 use crate::types::DaySolver;

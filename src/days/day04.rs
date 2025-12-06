@@ -2,10 +2,10 @@ use crate::types::DaySolver;
 
 pub struct Solver;
 
-fn remove_rolls(input: &mut Vec<Vec<bool>>, remove: bool) -> u32 {
+fn remove_rolls(input: &mut [Vec<bool>], remove: bool) -> u32 {
     let mut count = 0;
-    let mut height = input.len();
-    let mut width = input[0].len();
+    let height = input.len();
+    let width = input[0].len();
     for y in 0..height {
         for x in 0..width {
             if !input[y][x] {
@@ -21,7 +21,7 @@ fn remove_rolls(input: &mut Vec<Vec<bool>>, remove: bool) -> u32 {
                 (x as isize - 1, y as isize),     // Left
                 (x as isize - 1, y as isize - 1), // Up Left
             ];
-            let mut neighbour_count = coords
+            let neighbour_count = coords
                 .iter()
                 .filter(|(nx, ny)| {
                     if *nx >= 0 && *nx < width as isize && *ny >= 0 && *ny < height as isize {

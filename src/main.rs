@@ -1,9 +1,9 @@
 use aoc23::{run_parallel, run_serial, Task, DAY_COUNT};
 use clap::Parser;
 use std::{
+    fmt::Write,
     time::{Duration, Instant},
     vec,
-    fmt::Write,
 };
 
 #[cfg(test)]
@@ -72,8 +72,8 @@ fn main() -> std::fmt::Result {
     results += "--: | :-------------: | :--------------:| --------: | :--------\n";
     for (i, day) in days.iter().enumerate() {
         #[allow(clippy::cast_precision_loss)]
-         writeln!(
-             results,
+        writeln!(
+            results,
             "{: >3} | {: <15} | {: <15} | {: >9.2?} | {: >4.2} %",
             day,
             cap_length(&results1[i], 15),
@@ -92,7 +92,7 @@ fn main() -> std::fmt::Result {
     println!("{results}");
 
     // update the Readme. First 6 lines are kept as is
-    let mut readme = String::new(); 
+    let mut readme = String::new();
     if let Ok(content) = std::fs::read_to_string("README.md") {
         let header = content.lines().take(6);
         for line in header {

@@ -1,4 +1,4 @@
-use std::{collections::HashSet, ops::RangeInclusive};
+use std::ops::RangeInclusive;
 
 use crate::types::DaySolver;
 
@@ -68,7 +68,7 @@ impl<'a> DaySolver<'a> for Solver {
         fresh.to_string()
     }
 
-    fn solve2(&self, input: &Self::Input, test: bool) -> String {
+    fn solve2(&self, input: &Self::Input, _test: bool) -> String {
         let mut total_fresh = 0;
         // ranges are already merged in parse_input
         for range in &input.fresh {

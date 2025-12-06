@@ -47,7 +47,7 @@ fn parse_day_2(grid: &Grid, test: bool) -> Vec<Problem> {
                 if b == b' ' {
                     continue;
                 }
-                let digit = (b - b'0') as u64;
+                let digit = u64::from(b - b'0');
                 values[i] += digit * 10u64.pow(exp[i]);
                 exp[i] += 1;
             }
@@ -65,10 +65,10 @@ fn parse_day_2(grid: &Grid, test: bool) -> Vec<Problem> {
 fn solve_problems(input: Vec<Problem>) -> String {
     let mut sum = 0;
     for problem in input {
-        let result: u64 = match problem.op as char {
+        let result: u64 = match problem.op {
             '+' => problem.values.iter().sum(),
             '*' => problem.values.iter().product(),
-            _ => panic!("Unknown operation: {}", problem.op as char),
+            _ => panic!("Unknown operation: {}", problem.op),
         };
         sum += result;
     }
