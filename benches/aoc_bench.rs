@@ -1,6 +1,6 @@
 use std::time::Duration;
 
-use aoc23::{calc_day, Task};
+use aoc25::{calc_day, Task};
 use criterion::{black_box, criterion_group, criterion_main, Criterion};
 
 fn bench_day(day: usize) {

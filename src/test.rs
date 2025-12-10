@@ -1,6 +1,6 @@
 use std::time::Duration;
 
-use aoc23::{calc_day, Task};
+use aoc25::{calc_day, Task};
 
 fn test_day(day: usize, exp1: &str, exp2: &str) {
     let mut res1 = String::new();
@@ -56,12 +56,12 @@ pub fn day7() {
 
 #[test]
 pub fn day8() {
-    test_day(8, "Not implemented", "Not implemented");
+    test_day(8, "175440", "3200955921");
 }
 
 #[test]
 pub fn day9() {
-    test_day(9, "Not implemented", "Not implemented");
+    test_day(9, "4769758290", "Not implemented");
 }
 
 #[test]

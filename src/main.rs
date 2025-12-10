@@ -1,4 +1,4 @@
-use aoc23::{run_parallel, run_serial, Task, DAY_COUNT};
+use aoc25::{run_parallel, run_serial, Task, DAY_COUNT};
 use clap::Parser;
 use std::{
     fmt::Write,
