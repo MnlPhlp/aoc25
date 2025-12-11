@@ -41,10 +41,17 @@ impl<'a> DaySolver<'a> for Solver {
         let mut min_distances: Vec<(usize, usize, u64)> = Vec::with_capacity(iterations + 1);
         for (i, one) in input.iter().enumerate() {
             for (j, two) in input.iter().enumerate().skip(i + 1) {
-                let distance = (one.x.abs_diff(two.x).pow(2)
+                let distance = one.x.abs_diff(two.x).pow(2)
                     + one.y.abs_diff(two.y).pow(2)
-                    + one.z.abs_diff(two.z).pow(2))
-                .isqrt();
+                    + one.z.abs_diff(two.z).pow(2);
+
+                // skip search if distance is already larger than the largest in min_distances
+                if distance > min_distances.last().map_or(u64::MAX, |&(_, _, d)| d) {
+                    if min_distances.len() < iterations {
+                        min_distances.push((i, j, distance));
+                    }
+                    continue;
+                }
                 match min_distances.binary_search_by(|&(_, _, d)| d.cmp(&distance)) {
                     Ok(pos) | Err(pos) => {
                         min_distances.insert(pos, (i, j, distance));
@@ -118,29 +125,33 @@ impl<'a> DaySolver<'a> for Solver {
     }
 
     fn solve2(&self, input: &Self::Input, _test: bool) -> String {
-        // find the shortest connection for each point to any other point
-        let mut shortes_connection: Vec<(usize, usize, u64)> = Vec::with_capacity(input.len());
+        // find the shortest connection for each point to any other point, sorted by distance
+        let mut shortest_connection: Vec<(usize, usize, u64)> = Vec::with_capacity(input.len());
+
         for (i, one) in input.iter().enumerate() {
             let mut min_distance = u64::MAX;
             let mut min_pair = 0;
             for (j, two) in input.iter().enumerate() {
                 // skip self and already connected points
-                if i == j || shortes_connection.get(j).is_some_and(|pair| pair.0 == i) {
+                if i == j || shortest_connection.get(j).is_some_and(|pair| pair.0 == i) {
                     continue;
                 }
-                let distance = (one.x.abs_diff(two.x).pow(2)
+                let distance = one.x.abs_diff(two.x).pow(2)
                     + one.y.abs_diff(two.y).pow(2)
-                    + one.z.abs_diff(two.z).pow(2))
-                .isqrt();
+                    + one.z.abs_diff(two.z).pow(2);
                 if distance < min_distance {
                     min_distance = distance;
                     min_pair = j;
                 }
             }
-            shortes_connection.push((i, min_pair, min_distance));
+            match shortest_connection.binary_search_by_key(&min_distance, |&(_, _, d)| d) {
+                Ok(pos) | Err(pos) => {
+                    shortest_connection.insert(pos, (i, min_pair, min_distance));
+                }
+            }
         }
-        shortes_connection.sort_unstable_by(|a, b| a.2.cmp(&b.2));
-        let last_connection = shortes_connection.last().unwrap();
+
+        let last_connection = shortest_connection.last().unwrap();
         println!(
             "Last connection: {} -> {}: {}",
             input[last_connection.0], input[last_connection.1], last_connection.2
