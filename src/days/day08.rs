@@ -125,38 +125,49 @@ impl<'a> DaySolver<'a> for Solver {
     }
 
     fn solve2(&self, input: &Self::Input, _test: bool) -> String {
-        // find the shortest connection for each point to any other point, sorted by distance
-        let mut shortest_connection: Vec<(usize, usize, u64)> = Vec::with_capacity(input.len());
+        // the task is to find the last connection made when always connecting the closest pairs
+        // until all points are connected
+        // this means we need to find the longest distance among the shortest distances for each point
 
-        for (i, one) in input.iter().enumerate() {
+        let mut max_distance = 0;
+        let mut max_a = 0;
+        let mut max_b = 0;
+
+        // find the longest one of the shortest connection for each point
+        'outer: for (i, one) in input.iter().enumerate() {
             let mut min_distance = u64::MAX;
             let mut min_pair = 0;
+            // find the closest point to 'one'
             for (j, two) in input.iter().enumerate() {
-                // skip self and already connected points
-                if i == j || shortest_connection.get(j).is_some_and(|pair| pair.0 == i) {
+                if i == j {
                     continue;
                 }
                 let distance = one.x.abs_diff(two.x).pow(2)
                     + one.y.abs_diff(two.y).pow(2)
                     + one.z.abs_diff(two.z).pow(2);
+                if distance < max_distance {
+                    // no need to check further, this will never be the longest shortest distance
+                    continue 'outer;
+                }
                 if distance < min_distance {
                     min_distance = distance;
                     min_pair = j;
                 }
             }
-            match shortest_connection.binary_search_by_key(&min_distance, |&(_, _, d)| d) {
-                Ok(pos) | Err(pos) => {
-                    shortest_connection.insert(pos, (i, min_pair, min_distance));
-                }
+            if min_distance > max_distance {
+                max_distance = min_distance;
+                max_a = i;
+                max_b = min_pair;
             }
         }
 
-        let last_connection = shortest_connection.last().unwrap();
         println!(
             "Last connection: {} -> {}: {}",
-            input[last_connection.0], input[last_connection.1], last_connection.2
+            input[max_a],
+            input[max_b],
+            max_distance.isqrt()
         );
-        let result = input[last_connection.0].x * input[last_connection.1].x;
+        let result = input[max_a].x * input[max_b].x;
         result.to_string()
     }
 }
