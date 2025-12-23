@@ -61,7 +61,7 @@ pub fn day8() {
 
 #[test]
 pub fn day9() {
-    test_day(9, "4769758290", "Not implemented");
+    test_day(9, "4769758290", "1588990708");
 }
 
 #[test]
