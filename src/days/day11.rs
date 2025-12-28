@@ -1,21 +1,17 @@
-use std::{
-    collections::{HashMap, HashSet, VecDeque},
-    time::Instant,
-};
+use std::collections::{HashMap, VecDeque};
 
 use crate::types::DaySolver;
 
 pub struct Solver;
 
 #[derive(Debug, Clone)]
-pub struct Machine<'a> {
-    name: &'a str,
+pub struct Machine {
     connections: Vec<usize>,
 }
 
 #[derive(Clone)]
 pub struct Input<'a> {
-    machines: Vec<Machine<'a>>,
+    machines: Vec<Machine>,
     indices: HashMap<&'a str, usize>,
 }
 
@@ -24,16 +20,21 @@ fn count_paths(
     start: &str,
     end: &str,
     cache: &mut HashMap<(usize, usize), usize>,
+    test: bool,
 ) -> usize {
     let start_id = input.indices[start];
     let end_id = input.indices[end];
+
     let count = count_paths_inner(&input.machines, start_id, end_id, cache);
-    println!("{start} -> {end}: {count}");
+
+    if test {
+        println!("{start} -> {end}: {count}");
+    }
     count
 }
 
 fn count_paths_inner(
-    machines: &[Machine<'_>],
+    machines: &[Machine],
     current: usize,
     end: usize,
     cache: &mut HashMap<(usize, usize), usize>,
@@ -60,7 +61,6 @@ impl<'a> DaySolver<'a> for Solver {
         let mut indices = HashMap::new();
         indices.insert("out", 0);
         machines.push(Machine {
-            name: "out",
             connections: vec![],
         });
         for line in input.lines() {
@@ -68,7 +68,6 @@ impl<'a> DaySolver<'a> for Solver {
             let id = machines.len();
             indices.insert(name, id);
             machines.push(Machine {
-                name,
                 connections: vec![],
             });
         }
@@ -85,22 +84,21 @@ impl<'a> DaySolver<'a> for Solver {
         Input { machines, indices }
     }
 
-    fn solve1(&self, input: &Self::Input, _test: bool) -> String {
+    fn solve1(&self, input: &Self::Input, test: bool) -> String {
         let mut cache = HashMap::new();
-        count_paths(input, "you", "out", &mut cache).to_string()
+        count_paths(input, "you", "out", &mut cache, test).to_string()
     }
 
-    fn solve2(&self, input: &Self::Input, _test: bool) -> String {
-        let mut paths = 0;
+    fn solve2(&self, input: &Self::Input, test: bool) -> String {
         let mut cache = HashMap::new();
-        let fft_to_dac = count_paths(input, "fft", "dac", &mut cache);
-        let dac_to_fft = count_paths(input, "dac", "fft", &mut cache);
-        let svr_to_fft = count_paths(input, "svr", "fft", &mut cache);
-        let svr_to_dac = count_paths(input, "svr", "dac", &mut cache);
-        let fft_to_out = count_paths(input, "fft", "out", &mut cache);
-        let dac_to_out = count_paths(input, "dac", "out", &mut cache);
+        let fft_to_dac = count_paths(input, "fft", "dac", &mut cache, test);
+        let dac_to_fft = count_paths(input, "dac", "fft", &mut cache, test);
+        let svr_to_fft = count_paths(input, "svr", "fft", &mut cache, test);
+        let svr_to_dac = count_paths(input, "svr", "dac", &mut cache, test);
+        let fft_to_out = count_paths(input, "fft", "out", &mut cache, test);
+        let dac_to_out = count_paths(input, "dac", "out", &mut cache, test);
         let svr_fft_dac_out = svr_to_fft * fft_to_dac * dac_to_out;
-        dbg!(svr_fft_dac_out);
-        paths.to_string()
+        let svr_dac_fft_out = svr_to_dac * dac_to_fft * fft_to_out;
+        (svr_fft_dac_out + svr_dac_fft_out).to_string()
     }
 }
